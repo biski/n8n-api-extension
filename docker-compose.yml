@@ -40,3 +40,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    networks:
+      - internal_net
+
+networks:
+  internal_net:
+    driver: bridge
