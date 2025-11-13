@@ -59,20 +59,20 @@ Serwis będzie pod: `http://localhost:3000`
 Budowa obrazu:
 
 ```bash
-npm run docker:build
+docker build -t n8n-api-extension:latest .
 ```
 
-Uruchomienie przez docker-compose:
+Uruchomienie (docker compose):
 
 ```bash
-npm run docker:run
+docker compose up -d   # lub: docker-compose up -d
 ```
 
-Zatrzymanie / logi:
+Logi / zatrzymanie:
 
 ```bash
-npm run docker:logs
-npm run docker:stop
+docker compose logs -f
+docker compose down
 ```
 
 W produkcji najczęściej: reverse proxy (NGINX / Traefik) przed kontenerem + ustawienie `API_TOKEN` w sekrecie.
@@ -157,7 +157,7 @@ MIT (zobacz `LICENSE`).
 ## Minimalne kroki wdrożenia na serwer
 
 1. Ustaw silny `API_TOKEN` w `.env` lub managerze sekretów.
-2. Zbuduj obraz (`npm run docker:build`) i uruchom kontener.
+2. Zbuduj obraz (`docker build -t n8n-api-extension:latest .`) i uruchom kontener (`docker compose up -d`).
 3. Podepnij reverse proxy z HTTPS.
 4. Wykonaj szybki test curl dla obu endpointów.
 
