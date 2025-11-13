@@ -16,6 +16,8 @@ cp .env.example .env   # ustaw własny API_TOKEN
 npm install
 ```
 
+Wymagania wersji Node: lokalnie do developmentu zalecane jest **Node.js 20+** (jsdom 27 i zależność webidl-conversions wykorzystują nowe właściwości ArrayBuffer dostępne od Node 20; na starszych wersjach, np. 18, zobaczysz błąd typu `TypeError: Cannot read properties of undefined (reading 'get')`).
+
 Alternatywnie przez HTTPS:
 
 ```bash
@@ -61,6 +63,8 @@ Budowa obrazu:
 ```bash
 docker build -t n8n-api-extension:latest .
 ```
+
+Upewnij się, że obraz bazowy używa Node 20+ (Dockerfile już ustawiony na `node:20-alpine`). Jeśli zobaczysz błąd związany z `webidl-conversions` / `ArrayBuffer.resizable`, oznacza to zbyt starą wersję Node.
 
 Uruchomienie (docker compose):
 
