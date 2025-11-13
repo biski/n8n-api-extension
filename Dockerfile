@@ -9,9 +9,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install dependencies
-RUN npm ci --only=production && \
-    npm install typescript @types/node --save-dev
+# Install all dependencies (including dev) for building
+RUN npm ci
 
 # Copy source code
 COPY src ./src
@@ -31,9 +30,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install production dependencies only
-RUN npm ci --only=production && \
-    npm cache clean --force
+# Install production dependencies only (omit dev for smaller image)
+RUN npm ci --omit=dev
 
 # Copy built application from builder
 COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist

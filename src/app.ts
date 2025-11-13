@@ -7,6 +7,16 @@ import morgan from 'morgan';
 import { setRoutes } from './routes/index';
 import { authenticate } from './middleware/auth';
 
+// Runtime Node version guard – jsdom/webidl-conversions needs Node >= 20 for ArrayBuffer.resizable descriptor
+const requiredMajor = 20;
+const currentMajor = parseInt(process.versions.node.split('.')[0], 10);
+if (currentMajor < requiredMajor) {
+    // Fail fast with clear message instead of cryptic TypeError later
+    // eslint-disable-next-line no-console
+    console.error(`FATAL: Node.js ${process.versions.node} detected. Please run on Node >= ${requiredMajor}.`);
+    process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
