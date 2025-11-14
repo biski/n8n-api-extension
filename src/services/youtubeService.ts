@@ -3,9 +3,25 @@ import { getSubtitles, Subtitle } from 'youtube-caption-extractor';
 export type TranscriptFormat = 'json' | 'text' | 'srt' | 'vtt';
 
 export class YoutubeService {
-    async getTranscript(videoId: string, format: TranscriptFormat = 'json'): Promise<any> {
+    async getTranscript(videoId: string, format: TranscriptFormat = 'json', lang: string = 'en'): Promise<any> {
         try {
-            const subtitles = await getSubtitles({ videoID: videoId });
+            console.log(`[YoutubeService] Fetching transcript for video: ${videoId}, lang: ${lang}`);
+            
+            // Try with specified language first
+            let subtitles = await getSubtitles({ videoID: videoId, lang });
+            console.log(`[YoutubeService] Retrieved ${subtitles?.length || 0} subtitle entries for lang: ${lang}`);
+            
+            // If no subtitles found with specified language, try without language parameter (auto-detect)
+            if (!subtitles || subtitles.length === 0) {
+                console.log(`[YoutubeService] No subtitles for ${lang}, trying auto-detect...`);
+                subtitles = await getSubtitles({ videoID: videoId });
+                console.log(`[YoutubeService] Auto-detect returned ${subtitles?.length || 0} subtitle entries`);
+            }
+            
+            // If still no subtitles found, throw an error
+            if (!subtitles || subtitles.length === 0) {
+                throw new Error('No captions/subtitles available for this video. The video may not have captions enabled or may be restricted.');
+            }
             
             switch (format) {
                 case 'text':

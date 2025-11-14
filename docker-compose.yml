@@ -6,17 +6,18 @@ services:
     container_name: n8n-data-service
     restart: unless-stopped
     ports:
-      - "${PORT:-3000}:3000"
+      - "${PORT:-3000}:${PORT:-3000}"
     environment:
       - NODE_ENV=production
-      - PORT=3000
+      - PORT=${PORT:-3000}
       - API_TOKEN=${API_TOKEN}
       - CORS_ORIGIN=${CORS_ORIGIN:-*}
       - RATE_LIMIT_MAX=${RATE_LIMIT_MAX:-100}
+      - DEBUG=youtube-caption-extractor
     env_file:
       - .env
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => { process.exit(1); });"]
+      test: ["CMD", "sh", "-c", "node -e \"require('http').get('http://localhost:' + process.env.PORT + '/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => { process.exit(1); });\""]
       interval: 30s
       timeout: 10s
       retries: 3

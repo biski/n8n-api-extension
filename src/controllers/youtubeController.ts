@@ -13,6 +13,7 @@ class YoutubeController {
         try {
             const { videoId } = req.params;
             const format = (req.query.format as TranscriptFormat) || 'json';
+            const lang = (req.query.lang as string) || 'en';
 
             if (!videoId) {
                 return res.status(400).json({ 
@@ -39,7 +40,7 @@ class YoutubeController {
                 });
             }
 
-            const result = await this.youtubeService.getTranscript(videoId, format);
+            const result = await this.youtubeService.getTranscript(videoId, format, lang);
             res.status(200).json(result);
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error';
